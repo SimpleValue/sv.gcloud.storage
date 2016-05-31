@@ -1,4 +1,4 @@
-(defproject sv/gcloud.storage "0.1.1-SNAPSHOT"
+(defproject sv/gcloud.storage "0.1.1"
   :description "A client for Google Cloud Storage."
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
