@@ -8,11 +8,11 @@
 (def upload-endpoint "https://www.googleapis.com/upload/storage/v1/b/")
 
 (defn upload-request [params]
-  (let [{:keys [bucket path content]} params]
+  (let [{:keys [bucket name content]} params]
     {:method :post
      :url (str (:upload-endpoint params upload-endpoint) bucket "/o")
      :query-params {:uploadType "media"
-                    :name path}
+                    :name name}
      :content-type (:content-type params "application/octet-stream")
      :body content
      :as :json}))
@@ -21,7 +21,7 @@
   {:method :get
    :url (str (:storage-endpoint params storage-endpoint)
              (:bucket params) "/o/"
-             (c/url-encode (:path params)))
+             (c/url-encode (:name params)))
    :as :json})
 
 (defn get-object-info [client params]
@@ -40,11 +40,11 @@
          :as :stream})))))
 
 (defn delete-object-request [params]
-  (let [{:keys [bucket path content]} params]
+  (let [{:keys [bucket name content]} params]
    {:method :delete
     :url (str (:storage-endpoint params storage-endpoint)
               bucket "/o/"
-              (c/url-encode path))
+              (c/url-encode name))
     :as :json}))
 
 (defn delete-object [client params]
