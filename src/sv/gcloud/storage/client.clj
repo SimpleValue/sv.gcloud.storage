@@ -52,3 +52,25 @@
    (:body (client (delete-object-request params)))
    (catch [:status 404] _
      false)))
+
+(defn list-objects-request [params]
+  {:method :get
+   :url (str (:storage-endpoint params storage-endpoint)
+             (:bucket params) "/o/")
+   :query-params (dissoc params :storage-endpoint :bucket)
+   :as :json})
+
+(defn list-all-objects* [client params]
+  (let [response (client (list-objects-request params))]
+    (cons
+     response
+     (when-let [next-page-token (:nextPageToken (:body response))]
+       (lazy-seq
+        (list-all-objects*
+         client
+         (assoc params :pageToken next-page-token)))))))
+
+(defn list-all-objects [client params]
+  (mapcat
+   (comp :items :body)
+   (list-all-objects* client params)))
